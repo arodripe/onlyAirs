@@ -2,39 +2,38 @@
 
 ## Overview
 - Project name: OnlyAirs
-- One-liner: <what this product does in one sentence>
-- Vision: <future state we want to enable>
+- One-liner: Head-to-head community voting for fan photos.
+- Vision: Lightweight, global fan-voting matches with simple admin and analytics.
 
 ## Goals
-- <goal 1>
-- <goal 2>
-- <goal 3>
+- MVP landing with live match between two fans
+- Visible running vote totals; 6h match timer based on `endAt`
+- Admin-light: seed via SQL; later, simple upload/admin UI
 
 ## Non-goals
-- <explicitly out-of-scope 1>
-- <explicitly out-of-scope 2>
+- Full auth system, payments, complex moderation
+- Bot-proof voting (tracked as future TODO)
 
 ## Scope
-- MVP scope: <bounded, concrete capabilities>
-- Future scope: <likely follow-ons>
+- MVP scope: React SPA, mock client data, Postgres schema, seed of 20 fans
+- Future scope: Real backend (Django or serverless), uploads, rate limiting
 
 ## Success Metrics
-- Activation: <e.g., N sign-ups/week>
-- Engagement: <e.g., % of users completing key flow>
-- Reliability: <e.g., SLOs>
+- Engagement: visitors interact and vote; time-on-page during live match
+- Ops: simple deploy; <1s TTI on modern devices
 
 ## Constraints
-- Technical: <constraints, legacy, compliance>
-- Product: <timeline, budget, platform>
+- Technical: Prefer React SPA; backend pluggable; Postgres DB
+- Product: Move fast; lean MVP; English-only
 
 ## Stakeholders
-- Product: <name/role>
-- Engineering: <name/role>
-- Design: <name/role>
+- Product: Andres
+- Engineering: Andres + AI pair
 
 ## Glossary
-- <domain term>: <definition>
+- Fan: person/photo that can be voted on
+- Match: time-boxed head-to-head vote
 
 ## Open Questions
-- <unknown 1>
-- <unknown 2> 
+- Backend path: Django API vs serverless HTTP functions
+- Image storage: Vercel/S3/Supabase; add optimizer on upload

@@ -1,31 +1,33 @@
 # System Patterns and Architecture
 
 ## Architecture Overview
-- Style: <monolith | modular monolith | microservices>
-- Diagram: <link or placeholder>
+- Style: Frontend SPA with pluggable data client
+- Backend: TBD (Django API vs serverless); data access abstracted in `web/src/lib/api.ts`
 
 ## Components / Services
-- <component>: <responsibilities, inputs, outputs>
+- Web SPA: Landing/match page, admin-lite placeholder
+- Data Client: Mock client now; future HTTP client implementing same interface
 
 ## Data Model
-- Entities: <entity list>
-- Storage: <db/engines>
+- Entities: fan, match, vote
+- Storage: Postgres (schema in `db/schema.sql`)
 
 ## Integration Boundaries
-- External systems: <apis, webhooks, schedulers>
-- Contracts: <protocols, schemas>
+- Analytics: Umami (env-gated script injection)
+  - Implemented via `web/src/umami.ts` imported in the SPA entry file.
 
 ## Error Handling & Reliability
-- <retry, backoff, idempotency, circuit breaking>
+- Client-only MVP; server concerns deferred until backend selection
 
 ## Observability
 - <logging, tracing, metrics, dashboards>
 
 ## Security & Compliance
-- <authn/z, secrets, PII handling, encryption>
+- No auth in MVP; admin gated later. No PII beyond display name and image URL.
 
 ## Performance
 - <budgets, caching, pagination, N+1 mitigation>
+ - Totals read via pre-aggregated `match_fan_totals` for O(1) lookups.
 
 ## Configuration & Feature Flags
 - <configuration sources, flag strategy>

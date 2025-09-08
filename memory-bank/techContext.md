@@ -1,18 +1,20 @@
 # Tech Context
 
 ## Stack
-- Languages: <e.g., TypeScript, Python>
-- Frameworks: <e.g., Next.js, FastAPI>
-- Tooling: <package manager, build, formatter>
+- Languages: TypeScript (frontend), SQL (DB); backend TBD (Python/Django or serverless)
+- Frameworks: React + Vite
+- Styling: TailwindCSS v4
+- Tooling: npm, ESLint, Prettier (via ESLint rules), Vite
 
 ## Repository Layout
 - Root: `onlyAirs/`
 - Apps/Packages: <structure>
 
 ## Local Development
-- Prereqs: <versions>
-- Setup: <install, env vars>
-- Run: <commands>
+- Prereqs: Node 18+ (Node 20 recommended)
+- Setup: `cd web && npm install`
+- Env vars: `VITE_UMAMI_URL`, `VITE_UMAMI_WEBSITE_ID` (optional)
+- Run: `npm run dev`
 
 ## Environments
 - Local, Staging, Production: <urls, differences>
@@ -21,15 +23,15 @@
 - <provider, pipelines, gates>
 
 ## Dependencies
-- Runtime: <key deps>
-- Dev: <linters, test libs>
+- Runtime: react, react-dom
+- Dev: vite, @vitejs/plugin-react, typescript, tailwindcss, postcss, autoprefixer, eslint
 
 ## Testing Strategy
-- <unit, integration, e2e>
+- Start with component-level tests later (Vitest + React Testing Library).
 
 ## Code Quality
 - Lint: <rules>
 - Format: <tool>
 
 ## Configuration & Secrets
-- <how managed, rotation> 
+- Frontend uses Vite env vars prefixed with `VITE_`. Backend secrets TBD.
