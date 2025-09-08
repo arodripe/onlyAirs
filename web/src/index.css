@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+/* Base app shell */
+html, body, #root { height: 100%; }
+body { @apply bg-white text-gray-900 antialiased; }
