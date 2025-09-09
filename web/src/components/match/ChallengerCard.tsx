@@ -3,9 +3,13 @@ import CountryFlag from '../common/CountryFlag'
 import HeartCount from '../common/HeartCount'
 import VoteButton from '../common/VoteButton'
 
-export default function ChallengerCard({ title, fan, total, onVote }: { title: string; fan: any; total: number; onVote?: () => void }) {
+export default function ChallengerCard({ title, fan, total, onVote, onFocus, onDoubleClick, active = false }: { title: string; fan: any; total: number; onVote?: () => void; onFocus?: () => void; onDoubleClick?: () => void; active?: boolean }) {
   return (
-    <div className="aspect-square border rounded-xl p-4 flex flex-col shadow-sm">
+    <div
+      className={`aspect-square rounded-2xl p-4 flex flex-col bg-white shadow-xl border border-gray-200 ${active ? 'ring-2 ring-brand' : ''}`}
+      onClick={onFocus}
+      onDoubleClick={onDoubleClick}
+    >
       <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
         <div className="font-medium">{title}</div>
       </div>
