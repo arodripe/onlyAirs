@@ -4,3 +4,9 @@
 
 html, body, #root { height: 100%; }
 body { @apply bg-white text-gray-900 antialiased; }
+
+/* Brand gradient text utility: left-to-right gradient using brand hue */
+.brand-gradient-text {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(45deg, rgb(152 84 26) 1.5em, rgb(255 107 53) 50%, rgb(255 165 0) 100%);
+}
