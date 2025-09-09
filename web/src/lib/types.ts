@@ -23,4 +23,11 @@ export type MatchWithFans = Match & {
   };
 };
 
+export type FeedEntry = {
+  id: string;
+  fan: Fan;
+  total: number;
+  result: 'winner' | 'loser';
+};
+
 

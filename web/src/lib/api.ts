@@ -1,10 +1,12 @@
-import type { Fan, MatchWithFans } from './types';
+import type { Fan, MatchWithFans, FeedEntry } from './types';
 import fansJson from '../fixtures/fans.json';
 import totalsJson from '../fixtures/totals.json';
 
 export interface DataClient {
   getLiveMatch(): Promise<MatchWithFans | null>;
   vote(matchId: string, fanId: string): Promise<{ ok: true }>; // Placeholder for future integrity work
+  getFeed(opts: { offset: number; limit: number }): Promise<Fan[]>;
+  getFeedEntries(opts: { offset: number; limit: number }): Promise<FeedEntry[]>;
 }
 
 export class MockClient implements DataClient {
@@ -41,6 +43,21 @@ export class MockClient implements DataClient {
   async vote(): Promise<{ ok: true }> {
     // No-op for MVP mock
     return { ok: true };
+  }
+
+  async getFeed({ offset, limit }: { offset: number; limit: number }): Promise<Fan[]> {
+    const sorted = [...this.fans].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    return sorted.slice(offset, offset + limit);
+  }
+
+  async getFeedEntries({ offset, limit }: { offset: number; limit: number }): Promise<FeedEntry[]> {
+    // Fake historical entries: alternate winner/loser with totals derived from index
+    const page = await this.getFeed({ offset, limit })
+    return page.map((fan, i) => {
+      const total = 5 + (offset + i)
+      const result: 'winner' | 'loser' = ((offset + i) % 3 === 0) ? 'winner' : 'loser'
+      return { id: `${fan.id}-${offset+i}`, fan, total, result }
+    })
   }
 }
 
