@@ -3,6 +3,7 @@ export type Fan = {
   displayName: string;
   imageUrl: string;
   countryCode: string; // ISO 3166-1 alpha-2
+  description: string;
   createdAt: string; // ISO timestamp
 };
 
