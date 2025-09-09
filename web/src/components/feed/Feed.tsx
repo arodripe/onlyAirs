@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FeedEntry } from '../../lib/types'
 import { createClient } from '../../lib/api'
 import HeartCount from '../common/HeartCount'
+import CountryFlag from '../common/CountryFlag'
+import IconsOverlay from '../common/IconOverlay'
 
 function FeedItemCard({ entry }: { entry: FeedEntry }) {
   const { fan, total, result } = entry
@@ -9,9 +11,12 @@ function FeedItemCard({ entry }: { entry: FeedEntry }) {
     <div className="border rounded-xl overflow-hidden shadow-sm">
       <div className="relative aspect-square bg-gray-50">
         <img src={fan.imageUrl} alt={fan.displayName} className="object-cover w-full h-full" />
-        <div className="absolute bottom-2 right-2 text-2xl select-none">
-          {result === 'winner' ? '🏆' : '💩'}
-        </div>
+        <IconsOverlay corner="top-right">
+          <span className="text-2xl leading-none"><CountryFlag code={fan.countryCode} /></span>
+        </IconsOverlay>
+        <IconsOverlay corner="bottom-right">
+          <span className="text-2xl leading-none select-none">{result === 'winner' ? '🏆' : '💩'}</span>
+        </IconsOverlay>
       </div>
       <div className="p-3 text-sm flex items-center justify-between">
         <div className="font-medium">{fan.displayName}</div>
@@ -84,5 +89,7 @@ export default function Feed() {
     </div>
   )
 }
+
+ 
 
 
