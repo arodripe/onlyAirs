@@ -36,8 +36,6 @@ export default function App() {
     })
   }, [client])
 
-  const { formatted } = useCountdown(match?.endAt ?? null)
-
   return (
     <div className="min-h-full flex flex-col">
       <Header title="OnlyFans" tagline="We love Fans, not Por..." />
