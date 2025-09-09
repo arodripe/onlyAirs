@@ -4,7 +4,7 @@ import Feed from './components/feed/Feed'
 import Header from './components/layout/Header'
 import Container from './components/layout/Container'
 import Timer from './components/match/Timer'
-import ChallengerCard from './components/match/ChallengerCard'
+import CardStack from './components/match/CardStack'
 
 function useCountdown(endAtIso: string | null) {
   const [now, setNow] = useState(() => Date.now())
@@ -46,13 +46,10 @@ export default function App() {
           {!loading && match && (
             <>
               <div className="flex items-center justify-between mb-6">
-                <div className="text-lg font-medium">Live Match</div>
+                <div className="text-lg font-medium"><span className="brand-gradient-text">Live Match</span></div>
                 <Timer endAt={match.endAt} />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <ChallengerCard title="Challenger 1" fan={match.challenger1} total={match.totals[match.challenger1.id] ?? 0} />
-                <ChallengerCard title="Challenger 2" fan={match.challenger2} total={match.totals[match.challenger2.id] ?? 0} />
-              </div>
+              <CardStack a={match.challenger1} b={match.challenger2} totals={match.totals} />
               <Feed />
             </>
           )}
