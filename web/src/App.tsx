@@ -40,7 +40,7 @@ export default function App() {
 
   return (
     <div className="min-h-full flex flex-col">
-      <Header title="OnlyAirs" tagline="We love Fans, not Por..." />
+      <Header title="OnlyFans" tagline="We love Fans, not Por..." />
       <main className="flex-1">
         <Container>
           <div className="py-10">
