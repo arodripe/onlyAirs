@@ -19,12 +19,15 @@ function FeedItemCard({ entry }: { entry: FeedEntry }) {
         </IconsOverlay>
       </div>
       <div className="p-3 text-sm flex items-center justify-between">
-        <div className="font-medium">{fan.displayName}</div>
+        <div className="font-medium truncate" title={fan.displayName}>{fan.displayName}</div>
         <div className="text-gray-600 flex items-center gap-2">
           <HeartCount count={total} />
           <span className="text-brand">{result}</span>
         </div>
       </div>
+      {fan.description && (
+        <div className="px-3 pb-3 text-xs text-gray-600 line-clamp-2" title={fan.description}>{fan.description}</div>
+      )}
     </div>
   )
 }
