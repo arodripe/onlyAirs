@@ -4,11 +4,24 @@ import { createClient } from '../../lib/api'
 import HeartCount from '../common/HeartCount'
 import CountryFlag from '../common/CountryFlag'
 import IconsOverlay from '../common/IconOverlay'
+import { useTypewriter } from '../../hooks/useTypewriter'
 
 function FeedItemCard({ entry }: { entry: FeedEntry }) {
   const { fan, total, result } = entry
+  const [visible, setVisible] = useState(false)
+  const ref = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) setVisible(true)
+    }, { threshold: 0.5 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+  const typed = useTypewriter(fan.description || '', 25, visible)
   return (
-    <div className="border rounded-xl overflow-hidden shadow-sm">
+    <div ref={ref} className="border rounded-xl overflow-hidden shadow-sm">
       <div className="relative aspect-square bg-gray-50">
         <img src={fan.imageUrl} alt={fan.displayName} className="object-cover w-full h-full" />
         <IconsOverlay corner="top-right">
@@ -26,7 +39,7 @@ function FeedItemCard({ entry }: { entry: FeedEntry }) {
         </div>
       </div>
       {fan.description && (
-        <div className="px-3 pb-3 text-xs text-gray-600 line-clamp-2" title={fan.description}>{fan.description}</div>
+        <div className="px-3 pb-3 text-xs text-gray-600 min-h-[2.5rem]" title={fan.description}>{typed}</div>
       )}
     </div>
   )

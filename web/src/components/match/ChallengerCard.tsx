@@ -3,6 +3,7 @@ import CountryFlag from '../common/CountryFlag'
 import HeartCount from '../common/HeartCount'
 import VoteButton from '../common/VoteButton'
 import { useEffect, useRef, useState } from 'react'
+import { useTypewriter } from '../../hooks/useTypewriter'
 
 export default function ChallengerCard({ title, fan, total, onVote, onFocus, onDoubleClick, active = false }: { title: string; fan: any; total: number; onVote?: () => void; onFocus?: () => void; onDoubleClick?: () => void; active?: boolean }) {
   const [revealDesc, setRevealDesc] = useState(false)
@@ -16,20 +17,8 @@ export default function ChallengerCard({ title, fan, total, onVote, onFocus, onD
     if (timerRef.current) { window.clearInterval(timerRef.current); timerRef.current = null }
   }, [active, fan?.id])
 
-  useEffect(() => {
-    if (!revealDesc) return
-    const text: string = fan?.description || ''
-    let i = 0
-    timerRef.current = window.setInterval(() => {
-      i += 1
-      setTyped(text.slice(0, i))
-      if (i >= text.length && timerRef.current) {
-        window.clearInterval(timerRef.current)
-        timerRef.current = null
-      }
-    }, 25)
-    return () => { if (timerRef.current) { window.clearInterval(timerRef.current); timerRef.current = null } }
-  }, [revealDesc, fan?.description])
+  const typewritten = useTypewriter(fan?.description || '', 25, revealDesc)
+  useEffect(() => { setTyped(typewritten) }, [typewritten])
 
   const handleClick = () => {
     if (onFocus) onFocus()
