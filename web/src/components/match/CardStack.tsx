@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ChallengerCard from './ChallengerCard'
 
 type Side = 'left' | 'right'
@@ -9,6 +9,31 @@ export default function CardStack({ a, b, totals }: { a: any; b: any; totals: Re
   const [stage, setStage] = useState<0 | 1 | 2 | 3>(0) // 0 idle, 1 pre-shift, 2 cross, 3 settle
   const [swapTarget, setSwapTarget] = useState<'a' | 'b' | null>(null)
   const [verticalFront, setVerticalFront] = useState(false)
+  const [localTotals, setLocalTotals] = useState<Record<string, number>>(() => ({ ...totals }))
+
+  // Keep local totals in sync if props change (e.g., from backend refresh)
+  useEffect(() => { setLocalTotals({ ...totals }) }, [totals])
+
+  const handleVote = (fanId: string) => {
+    setLocalTotals((prev) => ({
+      ...prev,
+      [fanId]: (prev[fanId] ?? 0) + 1,
+    }))
+  }
+
+  const handleVoteClick = (target: 'a' | 'b') => {
+    const isFront = (target === 'a') === frontIsA
+    if (!isFront) {
+      startSwap(target)
+      return
+    }
+    if (!verticalFront) {      
+      setVerticalFront(true)
+      return
+    }
+    const fanId = target === 'a' ? a.id : b.id
+    handleVote(fanId)
+  }
 
   const transforms = (
     side: Side,
@@ -78,8 +103,9 @@ export default function CardStack({ a, b, totals }: { a: any; b: any; totals: Re
         <ChallengerCard
           title={'Challenger 1'}
           fan={a}
-          total={totals[a.id] ?? 0}
+          total={localTotals[a.id] ?? 0}
           onFocus={() => startSwap('a')}
+          onVote={() => handleVoteClick('a')}
           active={frontIsA}
         />
       </div>
@@ -97,8 +123,9 @@ export default function CardStack({ a, b, totals }: { a: any; b: any; totals: Re
         <ChallengerCard
           title={'Challenger 2'}
           fan={b}
-          total={totals[b.id] ?? 0}
+          total={localTotals[b.id] ?? 0}
           onFocus={() => startSwap('b')}
+          onVote={() => handleVoteClick('b')}
           active={!frontIsA}
         />
       </div>
