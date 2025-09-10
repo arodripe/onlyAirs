@@ -78,7 +78,7 @@ export default function Feed() {
 
   return (
     <div className="mt-12">
-      <div className="mb-4 text-lg font-medium">Recent Fans</div>
+      <div className="mb-4 text-lg font-medium brand-gradient-text">Recent Fans</div>
       <div className="max-w-xl mx-auto space-y-6">
         {items.map((entry) => (
           <FeedItemCard key={entry.id} entry={entry} />
