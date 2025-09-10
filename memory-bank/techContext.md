@@ -3,8 +3,8 @@
 ## Stack
 - Languages: TypeScript (frontend), SQL (DB); backend TBD (Python/Django or serverless)
 - Frameworks: React + Vite
-- Styling: TailwindCSS v4
-- Tooling: npm, ESLint, Prettier (via ESLint rules), Vite
+- Styling: TailwindCSS v3 (PostCSS pipeline)
+- Tooling: npm, ESLint, Prettier (via ESLint rules), Vite 5
 
 ## Repository Layout
 - Root: `onlyAirs/`
@@ -24,10 +24,15 @@
 
 ## Dependencies
 - Runtime: react, react-dom
-- Dev: vite, @vitejs/plugin-react, typescript, tailwindcss, postcss, autoprefixer, eslint
+- Dev: vite@5, @vitejs/plugin-react@4, typescript, tailwindcss@3, postcss, autoprefixer, eslint
 
 ## Testing Strategy
 - Start with component-level tests later (Vitest + React Testing Library).
+
+## Frontend Patterns
+- `useTypewriter` hook for progressive text reveal; re-used by `ChallengerCard` and `FeedItemCard`.
+- `IntersectionObserver` for viewport-triggered effects; threshold=0.5; disconnect or idempotent trigger.
+- `IconsOverlay` for consistent scrim/position overlays; avoids duplication.
 
 ## Code Quality
 - Lint: <rules>

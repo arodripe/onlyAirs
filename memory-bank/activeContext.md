@@ -1,24 +1,28 @@
 # Active Context
 
-Last updated: 2025-09-08
+Last updated: 2025-09-10
 
 ## Current Focus
-- Scaffold React app (Vite + TS + Tailwind) with pluggable data layer and analytics stubs.
+- Build MVP UI/UX: live match stack interaction, feed, and micro-interactions.
 
 ## Recent Changes
-- Pinned toolchain to `vite@5` + plugin-react@4 for Node 18 compatibility.
-- Moved Umami injection to module `web/src/umami.ts` and import in `main.tsx`.
-- Added JSON fixtures `web/src/fixtures/{fans,totals}.json`; mock client now reads them.
-- Enhanced DB with `match_fan_totals` and trigger to increment counters from `vote` inserts.
+- UI: Introduced stacked-card interaction (`CardStack`) with hand-like three-stage animation (pre-shift, cross, settle). Stable cards A/B; only wrapper transforms animate (no mid-animation prop swaps) to avoid flicker.
+- Labels: `Challenger 1` bound to card A (left), `Challenger 2` to card B (right), independent of front/back.
+- Cards: `ChallengerCard` shows country flag overlay, brand styling, heart count, and optional description.
+- Typing effect: Created reusable `useTypewriter` hook; used for description reveal on tap (front card) and in feed when the card enters viewport (IntersectionObserver, threshold 0.5).
+- Feed: Single-column stack; each item reveals description with the typing effect; winner/loser overlays with scrims; flags overlay via shared IconsOverlay.
+- Theming: Brand color `rgb(152, 84, 26)`; gradient text utility `.brand-gradient-text`.
+- Assets: FavIcon SVG updated to use in-SVG gradient fill; stray character fixed in `index.html`.
+- Tooling: Pinned Vite 5 for Node 18; Tailwind v3 with PostCSS; Umami env-gated in `src/umami.ts`.
 
 ## Decisions
 - Use Memory Bank as the single source of truth for project context.
 
 ## Next Steps
-- Implement match timer based on `endAt` and show running totals.
-- Create read-only match page wired to mock client data.
-- Prepare migration path for real backend (Django vs serverless) using the data client.
-- Add TODO gates: IP-per-match limit, cookie/local throttle, admin auth, file uploads.
+- Vote flow: hook up vote action (client mock now), then backend; add integrity (IP-per-match, cookie/local throttle).
+- Backend selection and HTTP client swap for `MockClient`.
+- Admin-lite UI (upload fan with `countryCode` + description) or SQL path as agreed.
+- Accessibility: prefers-reduced-motion fallbacks for animations.
 
 ## Risks / Unknowns
 - Product requirements and architecture are not yet defined; placeholders exist. 
