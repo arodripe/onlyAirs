@@ -7,6 +7,8 @@
 ## Components / Services
 - Web SPA: Landing/match page, admin-lite placeholder
 - Data Client: Mock client now; future HTTP client implementing same interface
+ - UI Components: `Header`, `Container`, `Timer`, `ChallengerCard`, `Feed`, `IconsOverlay`, `HeartCount`, `CountryFlag`
+ - Interaction: `CardStack` controls the stacked-card UX (tilt, swap, focus)
 
 ## Data Model
 - Entities: fan, match, vote
@@ -28,6 +30,8 @@
 ## Performance
 - <budgets, caching, pagination, N+1 mitigation>
  - Totals read via pre-aggregated `match_fan_totals` for O(1) lookups.
+ - CardStack avoids mid-animation re-renders: two stable card elements (A,B) with transform-only animations; z-index staged via `stage` FSM; `will-change`/`translateZ(0)` for GPU compositing.
+ - Feed uses `IntersectionObserver` (threshold 0.5) to lazily trigger typing effect; no scroll handlers.
 
 ## Configuration & Feature Flags
 - <configuration sources, flag strategy>
