@@ -5,7 +5,7 @@ import VoteButton from '../common/VoteButton'
 import { useEffect, useRef, useState } from 'react'
 import { useTypewriter } from '../../hooks/useTypewriter'
 
-export default function ChallengerCard({ title, fan, total, onVote, onFocus, onDoubleClick, active = false }: { title: string; fan: any; total: number; onVote?: () => void; onFocus?: () => void; onDoubleClick?: () => void; active?: boolean }) {
+export default function ChallengerCard({ title, fan, total, onVote, onFocus, active = false }: { title: string; fan: any; total: number; onVote?: () => void; onFocus?: () => void; active?: boolean }) {
   const [revealDesc, setRevealDesc] = useState(false)
   const [typed, setTyped] = useState('')
   const timerRef = useRef<number | null>(null)
@@ -41,7 +41,7 @@ export default function ChallengerCard({ title, fan, total, onVote, onFocus, onD
       <div className="mt-3 flex items-center justify-between text-sm">
         <div className="font-medium truncate max-w-[60%]" title={fan.displayName}>{fan.displayName}</div>
         <div className="text-gray-600 flex items-center gap-2">
-          <HeartCount count={total} />
+          <HeartCount count={total} size="xl" />
         </div>
       </div>
       {fan.description && (
