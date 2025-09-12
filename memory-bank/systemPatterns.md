@@ -18,6 +18,13 @@
 - Analytics: Umami (env-gated script injection)
   - Implemented via `web/src/umami.ts` imported in the SPA entry file.
 
+## MCP Integrations
+- Notion MCP: Remote SSE endpoint configured and verified healthy.
+- GitHub MCP: Local command server launched via `npx @modelcontextprotocol/server-github`, authenticated with `GITHUB_TOKEN` sourced from `gh auth token` (ephemeral per-shell). Token is never committed; referenced via `${env:GITHUB_TOKEN}`.
+- Operational guardrails:
+  - `.cursor/rules/core.mdc` includes a "Check MCP connections" procedure.
+  - Notion runbook documents remediation: Environment setup runbook (see Knowledge base).
+
 ## Error Handling & Reliability
 - Client-only MVP; server concerns deferred until backend selection
 
