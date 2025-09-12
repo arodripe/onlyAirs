@@ -1,0 +1,64 @@
+---
+description: Create a GitHub task and a Notion mirror idempotently
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# Trigger
+Run **only** when the user writes exactly:
+`Create task: <title>`
+Optional inline args:
+- `repo=<owner>/<repo>`
+- `type=feature|bug|chore` (used as a label if available)
+
+# Goal
+Create (or reuse) a GitHub Issue as the source of truth and create/update a Notion page. Ensure **idempotent** behavior.
+
+# Behavior
+1) Repo resolution: if `repo` missing, ask once (`<owner>/<repo>`).
+2) Context gathering for the task:
+   - If the user gived you context about what he is planning to build, use it for complete the template below. If as a professional Engineering Manager you miss information for a good task description, ask for it before continue.
+   - Else make the needed questions for ensure a good description of the task.
+3) Idempotent search (MCP "github"):
+   - Find an **open** issue with exact `<title>`. If found, reuse `issue_number`.
+   - Else create issue with the template below; apply `type` label if present.
+4) Notion page (MCP "notion"):
+   - Title: `[#<issue_number>] <title>`
+   - Properties:
+     - GitHub Issue # = `<issue_number>`
+     - Repo = `<owner>/<repo>`
+     - Issue URL = `https://github.com/<owner>/<repo>/issues/<issue_number>`
+     - Status = `Todo`
+   - If a page for this issue exists (match by GitHub Issue #), **update** it.
+   - (Optional) Comment the Notion URL back on the GitHub issue.
+5) Suggest (do **not** create) branch name:
+   `feature/<issue-number>-<kebab-case-title>`
+
+# Issue body template
+### Context
+…
+
+### Acceptance Criteria
+- [ ] …
+
+### Definition of Done
+- [ ] Tests
+- [ ] Docs (link to Notion page)
+- [ ] Telemetry
+
+### Technical requirments
+- We need the next components for solving it.
+- We will need the next tests
+- We will need a new building block (like kafka, Redis, or any other)
+- any other relevant requirement
+
+
+# Output (to user)
+Show: resolved `repo`, `issue_number` + URL, Notion page URL, suggested branch name.
+
+# Safeguards
+- Never create branches/commits.
+- If multiple near-matches exist, ask to disambiguate.
+- If Notion DB absent, create a page and include a small properties table at the top.
+- On failure, report error and avoid partial duplicates on retry.
