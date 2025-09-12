@@ -1,0 +1,51 @@
+---
+description: Finalize or move task state in GitHub and Notion
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# Trigger
+Run only when the user writes:
+`Transition task: <issue_number> [magic=<word>]`
+
+# Magic words (ask if missing)
+- `in-pr`  → Leave issue open, comment PR URL; Notion Status = "In review".
+- `blocked`→ Label "blocked"; Notion "Blocked".
+- `wip`    → Notion "In progress".
+
+# Steps
+1) Resolve repo if needed (ask once).
+2) Use the changed files and all the context you have in your memory to update the original task:
+ - For the existing fields ensure if the acceptance criteria, definition of done or technical requriements have changed, if so, add the changes and put at the end of each of them a "(added during development) or "(changed during development)". The first one is for new requirments, the second one for chages on original requirements.
+ - Use the below "update template" to add the extra information to the original Issue and Notion document.
+2) GitHub (MCP "github"):
+   - `in-pr`: add PR link comment; update labels.
+   - `blocked`/`wip`: labels only.
+3) Notion (MCP "notion"):
+   - Find page by **GitHub Issue #** and update **Status** accordingly.
+   - Append PR link when relevant.
+
+#Update Template
+
+### Product Decisions
+- Release strategy (like A/B test, Soft release targeted to a specific market, feature flag, full release)
+- Behaivoral changes in the product
+- any other product decision
+- Tradeoffs (like "in this task we only developed the frontend but is not connected to the back, we're using fixtures for the project, the endpoint is only connected to the sandbox, or any other)
+
+### Architectura changes
+- Names of the new components created for the task
+- New microservices if any new
+- New building blocks needed or integrated (like Kafka, Redis, Durid or any other)
+- New libraries
+- Any other architectural change if so.
+
+### Security highlights
+- Enumerate the security risks if any.
+
+### Memory bank Changes
+- Add the main changes required in the memory bank.
+
+# Safeguards
+No pushes/merges; only comments/labels/states.

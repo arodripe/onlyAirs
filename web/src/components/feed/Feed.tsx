@@ -34,7 +34,7 @@ function FeedItemCard({ entry }: { entry: FeedEntry }) {
       <div className="p-3 text-sm flex items-center justify-between">
         <div className="font-medium truncate" title={fan.displayName}>{fan.displayName}</div>
         <div className="text-gray-600 flex items-center gap-2">
-          <HeartCount count={total} />
+          <HeartCount count={total} size = "xl" />
           <span className="text-brand">{result}</span>
         </div>
       </div>

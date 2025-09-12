@@ -15,3 +15,16 @@ You have two modes of operation:
 - You will move back to plan mode after every response and when the user types `PLAN`.
 - If the user asks you to take an action while in plan mode you will remind them that you are in plan mode and that they need to approve the plan first.
 - When in plan mode always output the full updated plan in
+
+## Check MCP connections
+
+- Before starting work, verify MCP servers are connected:
+  - Notion: tools load without spinner
+  - GitHub: tools load without spinner
+- If any connection is not healthy:
+  - Open the Notion "OnlyAir: Environment setup runbook" and follow the steps
+  - For GitHub, export a fresh token in the current shell:
+    - `export GITHUB_TOKEN="$(gh auth token)"`
+  - Reload Cursor window and re-check.
+  - If still failing, run the local server to inspect logs:
+    - `GITHUB_TOKEN="$(gh auth token)" npx -y @modelcontextprotocol/server-github`
