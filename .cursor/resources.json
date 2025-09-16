@@ -17,6 +17,11 @@
       "title": "OnlyAir: General Architecture vision",
       "page_url": "https://www.notion.so/26a9a99e15d28037b6dedeceb43b1f22",
       "page_id": "26a9a99e15d28037b6dedeceb43b1f22"
+    },
+    "rfc_database": {
+      "title": "OnlyAir: General Architecture vision",
+      "page_url": "https://www.notion.so/2709a99e15d2805d976ccf43bed38a46",
+      "page_id": "2709a99e15d2805d976ccf43bed38a46"
     }
   },
   "description": "Non-secret MCP resource identifiers for agents and rules. Keep secrets out of source control. Edit via PR."

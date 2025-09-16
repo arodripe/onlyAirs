@@ -36,6 +36,14 @@ Create (or reuse) a GitHub Issue as the source of truth and create/update a Noti
    - (Optional) Comment the Notion URL back on the GitHub issue.
 5) Suggest (do **not** create) branch name:
    `feature/<issue-number>-<kebab-case-title>`
+6) If there is any architectural change (new services, new micros, deletion of any architectural element, deprecations, etc)
+    - Use the resources.json file to get the rfc_database id.
+    - Use the temaplte located in notion_temaplates/rfc_template.md for creating a new file in the database describing the RFC of the task.
+         - For the task creation:
+             - Title: `[#<issue_number>] <title>`
+             - GitHub Issue # = `<issue_number>`
+             - Creation date = current time
+             - Updade date = Current date
 
 # Issue body template
 ### Context
@@ -63,4 +71,5 @@ Show: resolved `repo`, `issue_number` + URL, Notion page URL, suggested branch n
 - Never create branches/commits.
 - If multiple near-matches exist, ask to disambiguate.
 - If Notion DB absent, create a page and include a small properties table at the top.
+- If RFC DB absent and RFC doc needed, create a page and include a small properties table at the top.
 - On failure, report error and avoid partial duplicates on retry.
