@@ -1,0 +1,26 @@
+{
+  "name": "onlyairs",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev:db": "docker compose -f infra/docker-compose.yml up -d",
+    "dev:db:down": "docker compose -f infra/docker-compose.yml down -v",
+    "dev": "npm run dev:db && cd web && npm run dev",
+    "db:apply": "node scripts/apply-schema.mjs",
+    "db:seed:fixtures": "node scripts/seed-from-fixtures.mjs"
+  },
+  "dependencies": {
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.1"
+  },
+  "overrides": {
+    "path-to-regexp": "^6.3.0",
+    "semver": "^7.6.3",
+    "undici": "^5.28.6",
+    "debug": "^4.3.4",
+    "tar": "^6.2.1"
+  }
+}

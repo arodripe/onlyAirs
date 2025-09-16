@@ -1,5 +1,7 @@
 -- Postgres schema for OnlyAirs MVP
 
+create extension if not exists pgcrypto;
+
 create table if not exists fan (
   id uuid primary key default gen_random_uuid(),
   display_name text not null,
@@ -56,4 +58,12 @@ select m.id as match_id, t.fan_id, t.total
 from match m
 join match_fan_totals t on t.match_id = m.id;
 
+
+-- Request rate limiting (fixed window per key)
+create table if not exists rate_limit (
+  key text not null,
+  window_start timestamptz not null,
+  count integer not null default 0,
+  primary key (key, window_start)
+);
 
