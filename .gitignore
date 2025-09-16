@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+web/node_modules/
+
+# Build outputs
+dist/
+web/dist/
+.vite/
+web/.vite/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Vercel
+.vercel
