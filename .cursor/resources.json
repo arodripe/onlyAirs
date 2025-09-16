@@ -1,0 +1,18 @@
+{
+  "repo": "arodripe/onlyAirs",
+  "repo_id": "R_kgDOPr-Ipw",
+  "repo_url": "https://github.com/arodripe/onlyAirs",
+  "notion": {
+    "kanban": {
+      "name": "OnlyAir: Kanban Board",
+      "data_source_id": "26c9a99e-15d2-8010-a080-000be07069f8",
+      "database_url": "https://www.notion.so/26c9a99e15d2805c904bd3d785d51b97"
+    },
+    "runbook": {
+      "title": "OnlyAir: Environment setup runbook",
+      "page_url": "https://www.notion.so/26c9a99e15d281099f08e0b3fd9ffe37",
+      "page_id": "26c9a99e-15d2-8109-9f08-e0b3fd9ffe37"
+    }
+  },
+  "description": "Non-secret MCP resource identifiers for agents and rules. Keep secrets out of source control. Edit via PR."
+}

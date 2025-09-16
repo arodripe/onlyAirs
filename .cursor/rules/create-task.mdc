@@ -16,7 +16,9 @@ Optional inline args:
 Create (or reuse) a GitHub Issue as the source of truth and create/update a Notion page. Ensure **idempotent** behavior.
 
 # Behavior
-1) Repo resolution: if `repo` missing, ask once (`<owner>/<repo>`).
+1) Repo resolution:
+   - If `repo` missing, first try `.cursor/resources.json` key `repo`.
+   - If not found, ask once for `<owner>/<repo>`.
 2) Context gathering for the task:
    - If the user gived you context about what he is planning to build, use it for complete the template below. If as a professional Engineering Manager you miss information for a good task description, ask for it before continue.
    - Else make the needed questions for ensure a good description of the task.
