@@ -23,7 +23,13 @@ function FeedItemCard({ entry }: { entry: FeedEntry }) {
   return (
     <div ref={ref} className="border rounded-xl overflow-hidden shadow-sm">
       <div className="relative aspect-square bg-gray-50">
-        <img src={fan.imageUrl} alt={fan.displayName} className="object-cover w-full h-full" />
+        <img
+          src={fan.imageUrl}
+          alt={fan.displayName}
+          loading="lazy"
+          decoding="async"
+          className="object-cover w-full h-full"
+        />
         <IconsOverlay corner="top-right">
           <span className="text-2xl leading-none"><CountryFlag code={fan.countryCode} /></span>
         </IconsOverlay>

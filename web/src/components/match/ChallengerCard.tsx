@@ -5,7 +5,7 @@ import VoteButton from '../common/VoteButton'
 import { useEffect, useRef, useState } from 'react'
 import { useTypewriter } from '../../hooks/useTypewriter'
 
-export default function ChallengerCard({ title, fan, total, onVote, onFocus, active = false }: { title: string; fan: any; total: number; onVote?: () => void; onFocus?: () => void; active?: boolean }) {
+export default function ChallengerCard({ title, fan, total, onVote, onFocus, active = false, expanded = false }: { title: string; fan: any; total: number; onVote?: () => void; onFocus?: () => void; active?: boolean; expanded?: boolean }) {
   const [revealDesc, setRevealDesc] = useState(false)
   const [typed, setTyped] = useState('')
   const timerRef = useRef<number | null>(null)
@@ -24,6 +24,8 @@ export default function ChallengerCard({ title, fan, total, onVote, onFocus, act
     if (onFocus) onFocus()
     if (active) setRevealDesc(true)
   }
+  // When parent sets expanded (front card vertical), ensure description is revealed
+  useEffect(() => { if (expanded && active) setRevealDesc(true) }, [expanded, active])
   return (
     <div
       className={`rounded-2xl p-4 flex flex-col bg-white shadow-xl border border-gray-200 transition-all duration-300 ${active ? 'ring-2 ring-brand' : ''}`}
@@ -33,7 +35,7 @@ export default function ChallengerCard({ title, fan, total, onVote, onFocus, act
         <div className="font-medium">{title}</div>
       </div>
       <div className="relative overflow-hidden rounded-md bg-gray-50 aspect-[4/3] sm:aspect-square">
-        <img src={fan.imageUrl} alt={fan.displayName} className="object-cover w-full h-full" />
+        <img src={fan.imageUrl} alt={fan.displayName} loading="eager" decoding="async" className="object-cover w-full h-full" />
         <IconsOverlay corner="top-right">
           <span className="text-2xl leading-none"><CountryFlag code={fan.countryCode} /></span>
         </IconsOverlay>

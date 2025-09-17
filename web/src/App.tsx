@@ -5,36 +5,40 @@ import Header from './components/layout/Header'
 import Container from './components/layout/Container'
 import Timer from './components/match/Timer'
 import CardStack from './components/match/CardStack'
+import { usePageVisibility } from './hooks/usePageVisibility'
 
-function useCountdown(endAtIso: string | null) {
-  const [now, setNow] = useState(() => Date.now())
-  useEffect(() => {
-    const i = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(i)
-  }, [])
-  return useMemo(() => {
-    if (!endAtIso) return { ms: 0, formatted: '00:00:00' }
-    const end = new Date(endAtIso).getTime()
-    const ms = Math.max(0, end - now)
-    const h = Math.floor(ms / 3600000)
-    const m = Math.floor((ms % 3600000) / 60000)
-    const s = Math.floor((ms % 60000) / 1000)
-    const pad = (n: number) => String(n).padStart(2, '0')
-    return { ms, formatted: `${pad(h)}:${pad(m)}:${pad(s)}` }
-  }, [endAtIso, now])
-}
+// countdown logic lives in hooks/useCountdown.ts via Timer component
 
 export default function App() {
   const client = useMemo(() => createClient(), [])
   const [loading, setLoading] = useState(true)
   const [match, setMatch] = useState<any>(null)
+  const [totals, setTotals] = useState<Record<string, number>>({})
+  const visible = usePageVisibility()
 
   useEffect(() => {
     client.getLiveMatch().then((m) => {
       setMatch(m)
+      setTotals(m?.totals ?? {})
       setLoading(false)
     })
   }, [client])
+
+  useEffect(() => {
+    if (!match) return
+    let timer: any
+    const tick = async () => {
+      if (!visible) return
+      try {
+        const t = await client.getCurrentTotals()
+        setTotals(t)
+      } catch {}
+    }
+    // immediate refresh and schedule
+    tick()
+    timer = setInterval(tick, 15000)
+    return () => clearInterval(timer)
+  }, [client, match, visible])
 
   return (
     <div className="min-h-full flex flex-col">
@@ -49,7 +53,14 @@ export default function App() {
                 <div className="text-lg font-medium"><span className="brand-gradient-text">Live Match</span></div>
                 <Timer endAt={match.endAt} />
               </div>
-              <CardStack a={match.challenger1} b={match.challenger2} totals={match.totals} />
+              <CardStack
+                a={match.challenger1}
+                b={match.challenger2}
+                totals={totals}
+                onVote={async (fanId) => {
+                  try { await client.vote(match.id, fanId) } catch {}
+                }}
+              />
               <Feed />
             </>
           )}

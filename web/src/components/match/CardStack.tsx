@@ -3,7 +3,7 @@ import ChallengerCard from './ChallengerCard'
 
 type Side = 'left' | 'right'
 
-export default function CardStack({ a, b, totals }: { a: any; b: any; totals: Record<string, number> }) {
+export default function CardStack({ a, b, totals, onVote }: { a: any; b: any; totals: Record<string, number>, onVote?: (fanId: string) => void }) {
   // Keep cards stable; just animate wrappers
   const [frontIsA, setFrontIsA] = useState<boolean>(() => Math.random() < 0.5)
   const [stage, setStage] = useState<0 | 1 | 2 | 3>(0) // 0 idle, 1 pre-shift, 2 cross, 3 settle
@@ -33,6 +33,7 @@ export default function CardStack({ a, b, totals }: { a: any; b: any; totals: Re
     }
     const fanId = target === 'a' ? a.id : b.id
     handleVote(fanId)
+    onVote?.(fanId)
   }
 
   const transforms = (
@@ -88,6 +89,9 @@ export default function CardStack({ a, b, totals }: { a: any; b: any; totals: Re
   const zA = (frontIsA ? 30 : 20) + (swapTarget === 'a' && stage >= 2 ? 10 : 0)
   const zB = (!frontIsA ? 30 : 20) + (swapTarget === 'b' && stage >= 2 ? 10 : 0)
 
+  const expandedA = verticalFront && stage === 0 && !swapTarget && frontIsA
+  const expandedB = verticalFront && stage === 0 && !swapTarget && !frontIsA
+
   return (
     <div className="relative h-[100vh] max-h-[660px] grid place-items-center">
       <div
@@ -104,6 +108,7 @@ export default function CardStack({ a, b, totals }: { a: any; b: any; totals: Re
           title={'Challenger 1'}
           fan={a}
           total={localTotals[a.id] ?? 0}
+          expanded={expandedA}
           onFocus={() => startSwap('a')}
           onVote={() => handleVoteClick('a')}
           active={frontIsA}
@@ -124,6 +129,7 @@ export default function CardStack({ a, b, totals }: { a: any; b: any; totals: Re
           title={'Challenger 2'}
           fan={b}
           total={localTotals[b.id] ?? 0}
+          expanded={expandedB}
           onFocus={() => startSwap('b')}
           onVote={() => handleVoteClick('b')}
           active={!frontIsA}
