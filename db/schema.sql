@@ -7,6 +7,7 @@ create table if not exists fan (
   display_name text not null,
   image_url text not null,
   country_code char(2) not null,
+  description text not null,
   created_at timestamptz not null default now()
 );
 
