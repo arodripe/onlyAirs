@@ -1,11 +1,13 @@
 # Active Context
 
-Last updated: 2025-09-12
+Last updated: 2025-09-17
 
 ## Current Focus
 - Build MVP UI/UX: live match stack interaction, feed, and micro-interactions.
 
 ## Recent Changes
+- API (Vercel Functions): added `GET /api/match/bootstrap` (single-call load), `GET /api/match/current/totals` (compact polling), `POST /api/fans/:id/like` (batched insert), DB-backed rate limiter, serverless-friendly PG pool.
+- Web: switched to real REST client; initial load via single call; polling totals only; Page Visibility pause; lazy-loaded feed images; fixed vote button event propagation; restored description reveal on expand.
 - UI: Introduced stacked-card interaction (`CardStack`) with hand-like three-stage animation (pre-shift, cross, settle). Stable cards A/B; only wrapper transforms animate (no mid-animation prop swaps) to avoid flicker.
 - Labels: `Challenger 1` bound to card A (left), `Challenger 2` to card B (right), independent of front/back.
 - Cards: `ChallengerCard` shows country flag overlay, brand styling, heart count, and optional description.
@@ -20,13 +22,13 @@ Last updated: 2025-09-12
 - Use Memory Bank as the single source of truth for project context.
  - Use ephemeral GitHub token via GitHub CLI for MCP (no tokens committed; env-only).
  - Add rule to check MCP connections before work; follow Notion runbook if any fail.
+- Collapsed initial match load to a single endpoint to reduce cold-start impact and network round trips.
 
 ## Next Steps
-- Vote flow: hook up vote action (client mock now), then backend; add integrity (IP-per-match, cookie/local throttle).
-- Backend selection and HTTP client swap for `MockClient`.
-- Admin-lite UI (upload fan with `countryCode` + description) or SQL path as agreed.
-- Accessibility: prefers-reduced-motion fallbacks for animations.
- - Optional dev DX: add helper script to export token/start local GitHub MCP for diagnostics.
+- Client batching for votes and integrity v1 (per-IP+UA, cookie nonce).
+- Hosted Postgres with pooler (RDS Proxy/pgBouncer); align Vercel region.
+- Feed API endpoint and admin-lite upload; image pipeline to object storage + CDN.
+- Observability baseline (structured logs, 5xx alert). 
 
 ## Risks / Unknowns
 - Product requirements and architecture are not yet defined; placeholders exist. 

@@ -12,9 +12,10 @@
 
 ## Local Development
 - Prereqs: Node 18+ (Node 20 recommended)
-- Setup: `cd web && npm install`
-- Env vars: `VITE_UMAMI_URL`, `VITE_UMAMI_WEBSITE_ID` (optional)
-- Run: `npm run dev`
+- Setup: `npm install && cd web && npm install`
+- Env vars: `DATABASE_URL`, `PG_POOL_MAX`, `VITE_UMAMI_URL`, `VITE_UMAMI_WEBSITE_ID` (optional)
+- Dev DB: `docker compose -f infra/docker-compose.yml up -d`
+- Run: `npm run dev` (starts DB + Vite); `vercel dev` for API
 
 ## MCP Setup (local dev)
 - GitHub MCP (ephemeral auth):
@@ -31,8 +32,9 @@
 
 ## Dependencies
 - Runtime: react, react-dom
-- Dev: vite@5, @vitejs/plugin-react@4, typescript, tailwindcss@3, postcss, autoprefixer, eslint
- - Tools: `@modelcontextprotocol/server-github` (invoked via `npx`, not installed locally)
+- API: pg
+- Dev: vite@5, @vitejs/plugin-react@4, typescript, tailwindcss@3, postcss, autoprefixer, eslint, vercel (CLI)
+- Tools: `@modelcontextprotocol/server-github` (invoked via `npx`, not installed locally)
 
 ## Testing Strategy
 - Start with component-level tests later (Vitest + React Testing Library).

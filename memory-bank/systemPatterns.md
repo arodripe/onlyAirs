@@ -1,12 +1,12 @@
 # System Patterns and Architecture
 
 ## Architecture Overview
-- Style: Frontend SPA with pluggable data client
-- Backend: TBD (Django API vs serverless); data access abstracted in `web/src/lib/api.ts`
+- Style: Frontend SPA with REST client
+- Backend: Serverless (Vercel Functions) for MVP; future Kafka/Redis path
 
 ## Components / Services
 - Web SPA: Landing/match page, admin-lite placeholder
-- Data Client: Mock client now; future HTTP client implementing same interface
+- API: `api/` functions — bootstrap match, totals polling, vote
  - UI Components: `Header`, `Container`, `Timer`, `ChallengerCard`, `Feed`, `IconsOverlay`, `HeartCount`, `CountryFlag`
  - Interaction: `CardStack` controls the stacked-card UX (tilt, swap, focus)
 
@@ -35,10 +35,10 @@
 - No auth in MVP; admin gated later. No PII beyond display name and image URL.
 
 ## Performance
-- <budgets, caching, pagination, N+1 mitigation>
- - Totals read via pre-aggregated `match_fan_totals` for O(1) lookups.
- - CardStack avoids mid-animation re-renders: two stable card elements (A,B) with transform-only animations; z-index staged via `stage` FSM; `will-change`/`translateZ(0)` for GPU compositing.
- - Feed uses `IntersectionObserver` (threshold 0.5) to lazily trigger typing effect; no scroll handlers.
+- Totals read via pre-aggregated `match_fan_totals` for O(1) lookups.
+- Single-call bootstrap; compact totals endpoint; Page Visibility-aware polling; image lazy loading.
+- CardStack avoids mid-animation re-renders: two stable card elements (A,B) with transform-only animations; z-index staged via `stage` FSM; `will-change`/`translateZ(0)` for GPU compositing.
+- Feed uses `IntersectionObserver` (threshold 0.5) to lazily trigger typing effect; no scroll handlers.
 
 ## Configuration & Feature Flags
 - <configuration sources, flag strategy>
