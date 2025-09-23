@@ -14,6 +14,11 @@
 - Entities: fan, match, vote
 - Storage: Postgres (schema in `db/schema.sql`)
 
+### Claps migration
+- Replaced `vote` event table with `clap(id bigserial, match_id uuid, fan_id uuid, count int, created_at timestamptz)`.
+- Trigger `clap_increment_total` increments `match_fan_totals.total` by `NEW.count` with `on conflict ... total = total + excluded.total`.
+- Rationale: batching claps sends aggregated counts per fan; a single insert per flush avoids composite PK conflicts and reduces write amplification.
+
 ## Integration Boundaries
 - Analytics: Umami (env-gated script injection)
   - Implemented via `web/src/umami.ts` imported in the SPA entry file.
@@ -38,6 +43,7 @@
 - Totals read via pre-aggregated `match_fan_totals` for O(1) lookups.
 - Single-call bootstrap; compact totals endpoint; Page Visibility-aware polling; image lazy loading.
 - CardStack avoids mid-animation re-renders: two stable card elements (A,B) with transform-only animations; z-index staged via `stage` FSM; `will-change`/`translateZ(0)` for GPU compositing.
+- Clap batching in client reduces request rate; server writes one row per fan per flush; trigger consolidates to totals. Hot row contention on `(match_id, fan_id)` totals is acceptable for MVP.
 - Feed uses `IntersectionObserver` (threshold 0.5) to lazily trigger typing effect; no scroll handlers.
 
 ## Configuration & Feature Flags
