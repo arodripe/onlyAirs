@@ -75,7 +75,11 @@ export function createClient(): DataClient {
 
 class RestClient implements DataClient {
   private base: string
-  constructor(base: string) { this.base = base }
+  private batcher: ClapBatcher
+  constructor(base: string) {
+    this.base = base
+    this.batcher = new ClapBatcher(base)
+  }
 
   private async json<T>(path: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`${this.base}${path}`, {
@@ -105,7 +109,7 @@ class RestClient implements DataClient {
   }
 
   async vote(matchId: string, fanId: string): Promise<{ ok: true }> {
-    await this.json(`/fans/${fanId}/like`, { method: 'POST', body: JSON.stringify({ count: 1 }) })
+    this.batcher.add(fanId, 1)
     return { ok: true }
   }
 
@@ -131,4 +135,90 @@ class RestClient implements DataClient {
   }
 }
 
+
+class ClapBatcher {
+  private base: string
+  private pending: Map<string, number>
+  private timer: number | null
+  private readonly debounceMs = 700
+  private readonly threshold = 10
+  private readonly maxPerFlush = 100
+
+  constructor(base: string) {
+    this.base = base
+    this.pending = new Map()
+    this.timer = null
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') this.flush({ keepalive: true })
+      })
+      window.addEventListener('beforeunload', () => {
+        this.flush({ keepalive: true })
+      })
+    }
+  }
+
+  add(fanId: string, count = 1) {
+    const prev = this.pending.get(fanId) || 0
+    this.pending.set(fanId, prev + count)
+    const total = this.totalPending()
+    if (total >= this.threshold) {
+      this.flush()
+      return
+    }
+    this.schedule()
+  }
+
+  private schedule() {
+    if (this.timer) { window.clearTimeout(this.timer); this.timer = null }
+    this.timer = window.setTimeout(() => this.flush(), this.debounceMs)
+  }
+
+  private totalPending(): number { let s = 0; for (const v of this.pending.values()) s += v; return s }
+
+  async flush(options?: { keepalive?: boolean }) {
+    if (this.timer) { window.clearTimeout(this.timer); this.timer = null }
+    if (this.pending.size === 0) return
+
+    // Prepare payload within limits. If over max, send up to max and keep remainder queued.
+    const entries = [...this.pending.entries()]
+    let toSend: { fanId: string; count: number }[] = []
+    let remaining: Map<string, number> = new Map()
+    let sentTotal = 0
+    for (const [fanId, count] of entries) {
+      if (sentTotal >= this.maxPerFlush) { remaining.set(fanId, count); continue }
+      const allowable = Math.min(count, this.maxPerFlush - sentTotal)
+      if (allowable > 0) {
+        toSend.push({ fanId, count: allowable })
+        sentTotal += allowable
+        const leftover = count - allowable
+        if (leftover > 0) remaining.set(fanId, leftover)
+      }
+    }
+
+    if (toSend.length === 0) return
+
+    // Swap buffers before network call to avoid double-adds
+    const previous = this.pending
+    this.pending = remaining
+
+    try {
+      await fetch(`${this.base}/claps/batch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ claps: toSend }),
+        keepalive: options?.keepalive === true,
+      })
+    } catch {
+      // Merge back on failure so a future flush retries
+      for (const [fanId, count] of previous.entries()) {
+        const prev = this.pending.get(fanId) || 0
+        this.pending.set(fanId, prev + count)
+      }
+      // Reschedule a retry with backoff-ish
+      this.timer = window.setTimeout(() => this.flush(), this.debounceMs * 2)
+    }
+  }
+}
 

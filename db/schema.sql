@@ -20,11 +20,12 @@ create table if not exists match (
   winner_fan_id uuid references fan(id) on delete set null
 );
 
-create table if not exists vote (
+create table if not exists clap (
+  id bigserial primary key,
   match_id uuid not null references match(id) on delete cascade,
   fan_id uuid not null references fan(id) on delete cascade,
-  created_at timestamptz not null default now(),
-  primary key (match_id, fan_id, created_at)
+  count integer not null default 1,
+  created_at timestamptz not null default now()
 );
 
 -- later: ip_hash for integrity, unique per (match_id, ip_hash)
@@ -37,21 +38,21 @@ create table if not exists match_fan_totals (
   primary key (match_id, fan_id)
 );
 
--- Trigger to keep totals up to date on insert
-create or replace function vote_increment_total()
+-- Trigger to keep totals up to date on clap insert
+create or replace function clap_increment_total()
 returns trigger as $$
 begin
   insert into match_fan_totals(match_id, fan_id, total)
-  values (new.match_id, new.fan_id, 1)
-  on conflict(match_id, fan_id) do update set total = match_fan_totals.total + 1;
+  values (new.match_id, new.fan_id, new.count)
+  on conflict(match_id, fan_id) do update set total = match_fan_totals.total + excluded.total;
   return new;
 end;
 $$ language plpgsql;
 
-drop trigger if exists trg_vote_increment_total on vote;
-create trigger trg_vote_increment_total
-after insert on vote
-for each row execute procedure vote_increment_total();
+drop trigger if exists trg_clap_increment_total on clap;
+create trigger trg_clap_increment_total
+after insert on clap
+for each row execute procedure clap_increment_total();
 
 -- Convenience view joining match and totals (optional for reporting)
 create or replace view match_totals as

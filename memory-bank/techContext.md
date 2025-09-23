@@ -43,6 +43,7 @@
 - `useTypewriter` hook for progressive text reveal; re-used by `ChallengerCard` and `FeedItemCard`.
 - `IntersectionObserver` for viewport-triggered effects; threshold=0.5; disconnect or idempotent trigger.
 - `IconsOverlay` for consistent scrim/position overlays; avoids duplication.
+ - `ClapBatcher` inside `web/src/lib/api.ts` accumulates taps and flushes to `POST /api/claps/batch` using threshold (10), debounce (~700ms), and lifecycle hooks (`visibilitychange`, `beforeunload`). Retries with simple backoff.
 
 ## Code Quality
 - Lint: <rules>
@@ -50,3 +51,8 @@
 
 ## Configuration & Secrets
 - Frontend uses Vite env vars prefixed with `VITE_`. Backend secrets TBD.
+
+## DB / Schema Notes
+- `clap` event table uses `bigserial` PK for write efficiency; business entities keep UUIDs.
+- Trigger `clap_increment_total` increments `match_fan_totals` by `NEW.count`. Prior duplicate key issue (composite PK with `now()` + `generate_series`) fixed by single-row insert per fan with aggregated count.
+- Future: consider idempotency keys per batch and light integrity (per-IP+UA+nonce caps).
